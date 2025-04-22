@@ -1,6 +1,7 @@
 .env
-_input/
-_output/
+_input/*
+!_input/comments.py
+_output/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

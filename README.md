@@ -17,7 +17,7 @@ https://github.com/digitaldemocracy2030/kouchou-ai/issues/324
 
 # 進捗　2025/04/23
 
-- テストデータは作成済み（添付のcomments.py）
+- テストデータは作成済み（_input/comments.py）
 - 超ざっくり実装し始めて動かしたところ、案の定単純Web検索とWikipedia検索は精度が低かった
 - 今後は単純LLM、ファクトチェックAPI、DeepResearchの3種類について本格的に実装する
 
