@@ -1,6 +1,5 @@
 from utils.types import Truthiness, ReasonType
 
-# 仮の政治コメントデータ。[コメント, 人力の正誤判定, 判定理由区分, 判定理由詳細]
 gold_data: list[str, Truthiness, ReasonType, str] = [
     ["日本の防衛費はGDPの2%を超えている。", Truthiness.FALSE, ReasonType.FACT, "2025年度で1.8%予定"],
     ["最低賃金を上げると失業率が必ず上がる。", Truthiness.FALSE, ReasonType.LOGIC, "「必ず」ではない"],
@@ -22,9 +21,9 @@ gold_data: list[str, Truthiness, ReasonType, str] = [
     ["日本は核兵器を持つべきだ。", Truthiness.UNCERTAIN, ReasonType.POLITICAL, "賛否両論あり"],
     ["日本の年金制度は破綻する。", Truthiness.UNCERTAIN, ReasonType.CONTEXTUAL, "破綻の定義による"], 
     ["アメリカは選挙でAIを使って世論を操作している。", Truthiness.UNCERTAIN, ReasonType.DIFFICULT, "AIの利用は増えているが、世論操作の証拠はない"],
-    ["日本の教育制度は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "国際的な評価は分かれる"],
-    ["日本の医療制度は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "国際的な評価は分かれる"],
-    ["日本の治安は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "国際的な評価は分かれる"],
+    ["日本の教育制度は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "基準による"],
+    ["日本の医療制度は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "基準による"],
+    ["日本の治安は世界一だ。", Truthiness.FALSE, ReasonType.CRITERIA, "基準による"],
     ["日本の経済成長率は先進国で最低だ。", Truthiness.TRUE, ReasonType.FACT, "OECD加盟国中で最低"],
     ["日本の人口は減少している。", Truthiness.TRUE, ReasonType.FACT, "継続的に人口減少している"],
     ["日本の出生率は1.5を下回っている。", Truthiness.TRUE, ReasonType.FACT, "2022年時点で1.34"],
@@ -33,3 +32,8 @@ gold_data: list[str, Truthiness, ReasonType, str] = [
     ["財務省はすべての国の借金を把握している。", Truthiness.FALSE, ReasonType.LOGIC, "「すべて」ではない"],
     ["憲法改正をすると戦争になる。", Truthiness.UNCERTAIN, ReasonType.PREDICTION, "予測に過ぎない"]
 ]
+'''
+正解データ。[コメント, 人力の正誤判定, 判定理由区分, 判定理由詳細]
+
+TODO: CSVから読み込むようにする
+'''

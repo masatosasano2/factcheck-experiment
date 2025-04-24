@@ -1,7 +1,10 @@
 .env
 _input/*
 !_input/comments.py
-_output/*
+_output/*.csv
+_output/*.json
+
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

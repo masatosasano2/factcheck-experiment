@@ -1,12 +1,12 @@
 from utils.llm import ask_llm
-from utils.types import FactcheckResult, ReasonType, Truthiness
+from utils.types import CheckerType, FactcheckResult, Truthiness
 from factcheckers.abstract_checker import AbstractChecker
 
 class SimpleLLMChecker(AbstractChecker):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name: CheckerType):
+        super().__init__(name)
 
-    def check(self, claim: str) -> FactcheckResult:
+    def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
         print(f"Checking LLM...")
         prompt = f"""
         あなたはファクトチェックの専門家です。
@@ -16,12 +16,7 @@ class SimpleLLMChecker(AbstractChecker):
         """
         result: Truthiness = Truthiness.UNCERTAIN
         try:
-            answer = ask_llm(
-                llm_type="openai",
-                model="o4-mini",
-                system_prompt="",
-                user_prompt=prompt
-            )
+            answer = ask_llm(prompt)
             if "true" in answer:
                 result = Truthiness.TRUE
             elif "false" in answer:
@@ -32,8 +27,4 @@ class SimpleLLMChecker(AbstractChecker):
             print(f"Error checking llm: {e}")
             result = Truthiness.UNCERTAIN
         
-        return FactcheckResult(
-            truthiness=result,
-            reason_type=ReasonType.UNKNOWN, # FIXME 答えさせる
-            detail="LLMに質問" # FIXME 答えさせる
-        )
+        return FactcheckResult(result) # FIXME 理由を返すようにしたい

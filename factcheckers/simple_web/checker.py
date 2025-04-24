@@ -1,32 +1,30 @@
-from annotated_types import T
-from utils.types import FactcheckResult, ReasonType, Truthiness
+import pandas as pd
+
+from utils.settings import CSE_ID, GCP_KEY
+from utils.types import CheckerType, FactcheckResult, Truthiness
 from factcheckers.abstract_checker import AbstractChecker
+from googleapiclient.discovery import build
 import requests
 
 class SimpleWebChecker(AbstractChecker):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name: CheckerType):
+        super().__init__(name)
 
-    def check(self, claim: str) -> FactcheckResult:
+    def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
         print(f"Checking web...")
-        headers = {"User-Agent": "Mozilla/5.0"}
-        query = claim.replace(" ", "+")
-        url = f"https://www.google.com/search?q={query}"
+
         result: Truthiness = Truthiness.UNCERTAIN
         try:
-            response = requests.get(url, headers=headers, timeout=5)
-            if "一致する情報が見つかりませんでした" in response.text:
-                result = Truthiness.FALSE
-            elif "についての情報" in response.text or "Wikipedia" in response.text:
-                result = Truthiness.TRUE # FIXME 怪しすぎる。〇〇はデマ、の〇〇が検出されかねない
+            service = build("customsearch", "v1", cache_discovery = False, developerKey = GCP_KEY)
+            response = service.cse().list(q = "\"" + claim.replace(" ", "+") + "\"", cx = CSE_ID, num = 10, start = 0).execute()
+            count = int(response['searchInformation']['totalResults'])
+
+            if count == 0:
+                result = Truthiness.FALSE # FIXME 検索されなければ偽、でいいのか？
             else:
-                result = Truthiness.UNCERTAIN
+                result = Truthiness.UNCERTAIN # 検索結果があるとしても、必ずしも正しいとは限らない
         except Exception as e:
             print(f"Error checking web: {e}")
-            result = Truthiness.UNKNOWN
+            result = Truthiness.UNCERTAIN
         
-        return FactcheckResult(
-            truthiness=result,
-            reason_type=ReasonType.UNKNOWN,
-            detail="Webを参照"
-        )
+        return FactcheckResult(result)

@@ -1,36 +1,43 @@
-from annotated_types import T
-from utils.types import FactcheckResult, ReasonType, Truthiness
+from utils.llm import ask_llm
+from utils.types import CheckerType, FactcheckResult, Truthiness
 from factcheckers.abstract_checker import AbstractChecker
 import requests
 
 class TargetSiteChecker(AbstractChecker):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, name: CheckerType):
+        super().__init__(name)
 
-    def check(self, claim: str) -> FactcheckResult:
+    def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
         print(f"Checking target sites...")
-        url = "https://ja.wikipedia.org/w/api.php" # FIXME 指定された複数のサイトをチェックしたい
+
+        prompt = f"""
+        政治的な主張に対してファクトチェックをしたいです。
+        方法は、真偽を逆にした上で、Wikipedia記事にヒットしやすいように文章を簡略化します。
+        簡略化の具体例は、少ない語数での言い換え、句読点の削除、不要な活用語尾の削除、などです。
+        てにをはは省略しません。
+        
+        「{claim}」という主張について、上記の方針で簡略化してください。
+        簡略化された文以外は回答しないでください。
+        """
+        inverse_claim = ask_llm(prompt)
+        print(f"Inverse claim: {inverse_claim}")
+
+        url = "https://en.wikipedia.org/w/rest.php/v1/search/page" # FIXME 指定された複数のサイトをチェックしたい
         params = {
-            "action": "query",
-            "format": "json",
-            "list": "search",
-            "srsearch": claim,
-            "utf8": 1
+            "q": inverse_claim,
+            "utf8": 1,
+            "limit": 5,
         }
         result: Truthiness = Truthiness.UNCERTAIN
         try:
             response = requests.get(url, params=params)
             data = response.json()
-            if data["query"]["search"]:
-                result = Truthiness.TRUE
+            if len(data["pages"]) > 0:
+                result = Truthiness.FALSE # 真偽を逆にしてヒットしたので、偽と判定
             else:
-                result = Truthiness.UNCERTAIN # FIXME このやり方だと決して偽と判定されない
+                result = Truthiness.UNCERTAIN
         except Exception as e:
             print(f"Error checking Wikipedia: {e}")
-            result = Truthiness.UNKNOWN
+            result = Truthiness.UNCERTAIN
         
-        return FactcheckResult(
-            truthiness=result,
-            reason_type=ReasonType.UNKNOWN,
-            detail="Wikipediaを参照"
-        )
+        return FactcheckResult(result)
