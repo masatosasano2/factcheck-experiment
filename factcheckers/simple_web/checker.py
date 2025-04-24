@@ -4,7 +4,6 @@ from utils.settings import CSE_ID, GCP_KEY
 from utils.types import CheckerType, FactcheckResult, Truthiness
 from factcheckers.abstract_checker import AbstractChecker
 from googleapiclient.discovery import build
-import requests
 
 class SimpleWebChecker(AbstractChecker):
     def __init__(self, name: CheckerType):
