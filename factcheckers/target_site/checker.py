@@ -22,9 +22,9 @@ class TargetSiteChecker(AbstractChecker):
         inverse_claim = ask_llm(prompt)
         print(f"Inverse claim: {inverse_claim}")
 
-        url = "https://en.wikipedia.org/w/rest.php/v1/search/page" # FIXME 指定された複数のサイトをチェックしたい
+        url = "https://ja.wikipedia.org/w/rest.php/v1/search/page" # FIXME 指定された複数のサイトをチェックしたい
         params = {
-            "q": inverse_claim,
+            "q": "\"" + inverse_claim.replace(" ", "+") + "\"",
             "utf8": 1,
             "limit": 5,
         }

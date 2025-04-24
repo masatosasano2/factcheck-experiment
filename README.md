@@ -19,9 +19,9 @@ https://github.com/digitaldemocracy2030/kouchou-ai/issues/324
 # 進捗　2025/04/25
 
 - 仮のテストデータは作成済み（_input/comments.py）
-- いくつかの手段でざっくり実装し始めたが、いずれも精度が非常に低い(参考画像 [1](https://github.com/user-attachments/assets/41ee5398-386b-42f6-8496-8cb9276e02cf) [2](https://github.com/user-attachments/assets/237eed79-5b7a-4c11-85c6-1bc0646abaf5))
+- いくつかの手段でざっくり実装し始めたが、いずれも精度が非常に低い(参考画像 [1](https://github.com/user-attachments/assets/a22f22ed-3c0e-4a09-8a45-0cfb19a43e91) [2](https://github.com/user-attachments/assets/a89788ef-7b85-4633-9dc9-54fc9c0921ba))
 - 今後は、残りの手法と精度改善に取り組む
-- その前に、LLMへの問い合わせが遅いのでまとめて複数件投げるなどの改修をする予定
+- その前に、LLMへの問い合わせが遅いので、非同期にするなりまとめて複数件投げるなりの改修をする
 
 # 使い方
 

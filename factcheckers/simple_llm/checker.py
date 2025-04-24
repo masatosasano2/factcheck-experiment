@@ -12,7 +12,7 @@ class SimpleLLMChecker(AbstractChecker):
         あなたはファクトチェックの専門家です。
         以下の主張が事実に基づいているかどうかを評価してください。
         主張: "{claim}"
-        回答は以下のいずれかの形式で返してください："true"（事実に基づいている）, "false"（事実に反している）, "uncertain"（判断できない）
+        回答は以下のいずれかの形式で返してください："true", "false", "uncertain"
         """
         result: Truthiness = Truthiness.UNCERTAIN
         try:
