@@ -6,8 +6,8 @@ class SimpleLLMChecker(AbstractChecker):
     def __init__(self, name: CheckerType):
         super().__init__(name)
 
-    def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
-        print(f"Checking LLM...")
+    async def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
+        print(f"Checking LLM asynchronously...")
         prompt = f"""
         あなたはファクトチェックの専門家です。
         以下の主張が事実に基づいているかどうかを評価してください。
@@ -16,7 +16,7 @@ class SimpleLLMChecker(AbstractChecker):
         """
         result: Truthiness = Truthiness.UNCERTAIN
         try:
-            answer = ask_llm(prompt)
+            answer = await ask_llm(prompt)
             if "true" in answer:
                 result = Truthiness.TRUE
             elif "false" in answer:

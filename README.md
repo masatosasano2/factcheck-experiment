@@ -22,7 +22,6 @@ https://github.com/digitaldemocracy2030/kouchou-ai/issues/324
 - いくつかの手段でざっくり実装し始めたが、いずれも精度が非常に低い(参考画像 [1](https://github.com/user-attachments/assets/a22f22ed-3c0e-4a09-8a45-0cfb19a43e91) [2](https://github.com/user-attachments/assets/a89788ef-7b85-4633-9dc9-54fc9c0921ba))
 - 特定サイト検索、Web検索は完全一致なのでどうしても見逃し率が高くなる
 - 今後は、LLM、ファクトチェックサービス、DeepResearchを中心に比較を進める
-- その前に、LLMへの問い合わせが遅いので、非同期にするなりまとめて複数件投げるなりの改修をする
 
 # 使い方
 
