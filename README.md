@@ -28,12 +28,12 @@ https://github.com/digitaldemocracy2030/kouchou-ai/issues/324
 
 ### 環境構築
 - .env.sample をコピーして .env ファイルを作り、自身のAPI_KEYなどを記載する
-- `pip3 install python-dotenv requests openai numpy pandas google-api-python-client`
+- `pip3 install -r requirements.txt`
 
 ### 実行方法
 - _input/comments.py のテスト対象コメントを差し替える
 - python3 main.py を実行する
-- 判定結果が _output/ に出力されます
+- 判定結果が _output/ に出力される
 
 # 要検討事項
 

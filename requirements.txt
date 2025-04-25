@@ -1,0 +1,6 @@
+python-dotenv
+numpy
+pandas
+requests
+openai
+google-api-python-client
