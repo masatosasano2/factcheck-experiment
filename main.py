@@ -24,10 +24,10 @@ async def process_method_cond_claim_async(method: CheckerType, condition_index: 
     
     check_conditions[type_and_cond(method, condition_index)] = str(condition)
     
-    for claim in claims:
-        tasks.append(asyncio.create_task(checker.check_one_condition(claim, condition)))
+    tasks.append(asyncio.create_task(checker.check_one_condition(claims, condition)))
     
-    results: List[FactcheckResult] = await asyncio.gather(*tasks)
+    results_list: List[List[FactcheckResult]] = await asyncio.gather(*tasks)
+    results: List[FactcheckResult] = results_list[0]
     
     for i, result in enumerate(results):
         checker_result = {}
