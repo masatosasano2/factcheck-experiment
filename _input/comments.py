@@ -1,6 +1,6 @@
 from utils.types import Truthiness, ReasonType
 
-gold_data: list[str, Truthiness, ReasonType, str] = [
+gold_data: list[tuple[str, Truthiness, ReasonType, str]] = [
     ["日本の防衛費はGDPの2%を超えている。", Truthiness.FALSE, ReasonType.FACT, "2025年度で1.8%予定"],
     ["最低賃金を上げると失業率が必ず上がる。", Truthiness.FALSE, ReasonType.LOGIC, "「必ず」ではない"],
     ["温暖化は中国のせいだ。", Truthiness.UNCERTAIN, ReasonType.CONTEXTUAL, "部分的にそうだが、中国のみのせいではない"],
