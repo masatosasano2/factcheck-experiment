@@ -1,12 +1,13 @@
 import datetime
 import asyncio
+from operator import truth
 
 from _input.comments import gold_data
 from evaluators.evaluator import evaluate_fact_checks
 from factcheckers.checker_factory import checker_of
 from pandas import json_normalize
 from typing import Dict, List
-from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, TypeAndCond, check_conditions, type_and_cond
+from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, Truthiness, TypeAndCond, check_conditions, type_and_cond
 
 CHECKER_TYPES: List[CheckerType] = [
     'site', 
@@ -41,7 +42,10 @@ async def main_async() -> None:
     
     for i in range(len(gold_data)):
         claims.append(gold_data[i][0])
-        manual_checks.append(FactcheckResult(gold_data[i][1], gold_data[i][2], gold_data[i][3]))
+        truthiness: Truthiness = gold_data[i][1]
+        reason_type: str = gold_data[i][2]
+        reason_detail: str = gold_data[i][3]
+        manual_checks.append(FactcheckResult(truthiness, reason_type, reason_detail))
     
     fact_check_dataset: List[FactcheckDatasetItem] = []
     
