@@ -65,7 +65,7 @@ async def main_async() -> None:
                 
                 fact_check_dataset[i].checker_judge.update(checker_results_list[i])
     
-    evaluation: Dict[str, List[Dict[str, any]]] = evaluate_fact_checks(fact_check_dataset)
+    evaluation: Dict[str, List[Dict[str, str | int | float]]] = evaluate_fact_checks(fact_check_dataset)
 
     if evaluation and "summary" in evaluation and "details" in evaluation:
         now: str = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y%m%d%H%M')

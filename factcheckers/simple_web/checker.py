@@ -11,7 +11,7 @@ class SimpleWebChecker(AbstractChecker):
     def __init__(self, name: CheckerType):
         super().__init__(name)
 
-    async def check_one_condition(self, claims: list[str], condition: any = {}) -> list[FactcheckResult]:
+    async def check_one_condition(self, claims: list[str], condition: dict = {}) -> list[FactcheckResult]:
         print(f"Checking web asynchronously...")
         results = []
         
