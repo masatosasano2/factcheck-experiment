@@ -6,7 +6,7 @@ from evaluators.evaluator import evaluate_fact_checks
 from factcheckers.checker_factory import checker_of
 from pandas import json_normalize
 from typing import Dict, List
-from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, TypeAndCond, type_and_cond
+from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, TypeAndCond, check_conditions, type_and_cond
 
 CHECKER_TYPES: List[CheckerType] = [
     'site', 
@@ -21,7 +21,6 @@ async def process_method_cond_claim_async(method: CheckerType, condition_index: 
     checker = checker_of(method)
     condition = checker.conditions()[condition_index]
     
-    from utils.types import check_conditions, type_and_cond
     check_conditions[type_and_cond(method, condition_index)] = str(condition)
     
     for claim in claims:
