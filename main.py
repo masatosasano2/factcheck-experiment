@@ -6,7 +6,7 @@ from evaluators.evaluator import evaluate_fact_checks
 from factcheckers.checker_factory import checker_of
 from pandas import json_normalize
 from typing import Dict, List
-from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, TypeAndCond, type_and_cond
+from utils.types import CheckConditionAndResult, CheckerType, FactcheckDatasetItem, FactcheckResult, TypeAndCond, check_conditions, type_and_cond
 
 CHECKER_TYPES: List[CheckerType] = [
     'site', 
@@ -19,9 +19,12 @@ async def process_method_cond_claim_async(method: CheckerType, condition_index: 
     tasks: List[asyncio.Task] = []
     
     checker = checker_of(method)
+    condition = checker.conditions()[condition_index]
+    
+    check_conditions[type_and_cond(method, condition_index)] = str(condition)
     
     for claim in claims:
-        tasks.append(asyncio.create_task(checker.check_one_condition(claim, checker.conditions()[condition_index])))
+        tasks.append(asyncio.create_task(checker.check_one_condition(claim, condition)))
     
     results: List[FactcheckResult] = await asyncio.gather(*tasks)
     
