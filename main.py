@@ -14,32 +14,50 @@ CHECKER_TYPES: List[CheckerType] = [
     'llm'
 ]
 
-async def process_claim_async(claim: str, manual_check: FactcheckResult) -> FactcheckDatasetItem:
-    checker_results: Dict[TypeAndCond, FactcheckResult] = {}
+async def process_method_cond_claim_async(method: CheckerType, condition_index: int, claims: List[str], manual_checks: List[FactcheckResult]) -> List[Dict[TypeAndCond, FactcheckResult]]:
+    checker_results_list: List[Dict[TypeAndCond, FactcheckResult]] = []
     tasks: List[asyncio.Task] = []
-
-    for method in CHECKER_TYPES:
-        tasks.append(asyncio.create_task(checker_of(method).check(claim)))
-
-    results: List[List[CheckConditionAndResult]] = await asyncio.gather(*tasks)
-
-    for method, condAndResults in zip(CHECKER_TYPES, results):
-        for condAndResult in condAndResults:
-            checker_results[type_and_cond(method, condAndResult.condition_index)] = condAndResult.result
-
-    return FactcheckDatasetItem(claim, manual_check, checker_results)
+    
+    checker = checker_of(method)
+    
+    for claim in claims:
+        tasks.append(asyncio.create_task(checker.check_one_condition(claim, checker.conditions()[condition_index])))
+    
+    results: List[FactcheckResult] = await asyncio.gather(*tasks)
+    
+    for i, result in enumerate(results):
+        checker_result = {}
+        checker_result[type_and_cond(method, condition_index)] = result
+        checker_results_list.append(checker_result)
+    
+    return checker_results_list
 
 async def main_async() -> None:
-    fact_check_dataset: List[FactcheckDatasetItem] = []
-    tasks: List[asyncio.Task] = []
-
+    claims: List[str] = []
+    manual_checks: List[FactcheckResult] = []
+    
     for i in range(len(gold_data)):
-        claim: str = gold_data[i][0]
-        manual_check: FactcheckResult = FactcheckResult(gold_data[i][1], gold_data[i][2], gold_data[i][3])
-        tasks.append(asyncio.create_task(process_claim_async(claim, manual_check)))
-
-    fact_check_dataset = await asyncio.gather(*tasks)
-
+        claims.append(gold_data[i][0])
+        manual_checks.append(FactcheckResult(gold_data[i][1], gold_data[i][2], gold_data[i][3]))
+    
+    fact_check_dataset: List[FactcheckDatasetItem] = []
+    
+    for method in CHECKER_TYPES:
+        checker = checker_of(method)
+        conditions = checker.conditions()
+        
+        for condition_index in range(len(conditions)):
+            tasks: List[asyncio.Task] = []
+            tasks.append(asyncio.create_task(process_method_cond_claim_async(method, condition_index, claims, manual_checks)))
+            
+            checker_results_list = (await asyncio.gather(*tasks))[0]
+            
+            for i, claim in enumerate(claims):
+                if i >= len(fact_check_dataset):
+                    fact_check_dataset.append(FactcheckDatasetItem(claim, manual_checks[i], {}))
+                
+                fact_check_dataset[i].checker_judge.update(checker_results_list[i])
+    
     evaluation: Dict[str, List[Dict[str, any]]] = evaluate_fact_checks(fact_check_dataset)
 
     if evaluation and "summary" in evaluation and "details" in evaluation:
