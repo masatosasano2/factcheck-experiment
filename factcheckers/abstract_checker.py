@@ -25,18 +25,23 @@ class AbstractChecker:
         raise NotImplementedError("This method should be overridden by subclasses")
     
     @final
-    async def check(self, claim: str) -> list[CheckConditionAndResult]:
+    async def check(self, claims: list[str]) -> list[list[CheckConditionAndResult]]:
         """
         ファクトチェックを実行するメソッド
-        :param claim: チェック対象の主張
-        :return: ファクトチェックの結果
+        :param claims: チェック対象の主張のリスト
+        :return: ファクトチェックの結果のリスト（claim毎にCheckConditionAndResultのリスト）
         """
-        check_results: list[CheckConditionAndResult] = []
+        all_results: list[list[CheckConditionAndResult]] = []
         conditions = self.conditions()
-        for idx in range(len(conditions)):
-            condition = self.conditions()[idx]
-            global check_conditions
-            check_conditions[type_and_cond(self.method, idx)] = str(condition)
-            result = await self.check_one_condition(claim, condition)
-            check_results.append(CheckConditionAndResult(idx, result))
-        return check_results
+        
+        for claim in claims:
+            check_results: list[CheckConditionAndResult] = []
+            for idx in range(len(conditions)):
+                condition = self.conditions()[idx]
+                global check_conditions
+                check_conditions[type_and_cond(self.method, idx)] = str(condition)
+                result = await self.check_one_condition(claim, condition)
+                check_results.append(CheckConditionAndResult(idx, result))
+            all_results.append(check_results)
+            
+        return all_results
