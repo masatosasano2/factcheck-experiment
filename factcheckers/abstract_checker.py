@@ -15,11 +15,11 @@ class AbstractChecker:
         """
         return [{}]
 
-    async def check_one_condition(self, claim: str, condition: any = {}) -> FactcheckResult:
+    async def check_one_condition(self, claims: list[str], condition: any = {}) -> list[FactcheckResult]:
         """
         チェック条件に基づいてファクトチェックを実行するメソッド
-        :param claim: チェック対象の主張
+        :param claims: チェック対象の主張のリスト
         :param condition: チェック条件
-        :return: ファクトチェックの結果
+        :return: ファクトチェックの結果のリスト
         """
         raise NotImplementedError("This method should be overridden by subclasses")
